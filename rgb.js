@@ -22,7 +22,7 @@ class rgb {
             if (alpha >= 0 & alpha <= 1) {
                 this.alpha = alpha;
             } else {
-                throw new Error("rgb, constructor: alpha params vaalue must be betwin 0 and 1 (0 and 1 include)")
+                throw new Error("rgb, constructor: alpha params value must be betwin 0 and 1 (0 and 1 include)")
             }
         } else {
             throw new TypeError("rgb, constructor: type of param alha must be number");
@@ -111,11 +111,17 @@ class rgb {
         let opp = op + 'border-top-left-radius:' + br + unit + ';border-top-right-radius:' + br + unit + ';';
         let oppp = op + 'border-bottom-left-radius:' + br + unit + ';border-bottom-right-radius:' + br + unit + ';';
         console.log('%c_----_\n' +
-            '%c......\n' +
-            '%c-____-%c' +
+                    '%c......\n' +
+                    '%c-____-%c' +
             strr,
             opp, op, oppp, '', ...logParam);
         return this;
+    }
+    to(percent) {
+        if (percent < 0 || percent > 100) {
+            throw new Error('rgb, to : pecent param value must be betwin 0 and 100 (0 and 100 include)');
+        }
+        
     }
 }
 rgb.random = class {
