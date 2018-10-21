@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: rgb.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: rgb.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * js-all 2018 tout droits non reservé
  * 
  */ 
@@ -6,10 +34,10 @@ class rgb {
    /**
     *  @class
     *  @constructor 
-    *  @param {Number} [red] - La valeur de rouge dans la couleur. Si non préciser prend la valeur defini dans rgb.config.defaultColor.red.
+    *  @param {Number} [red = rgb.config.defaultColor.red] - La valeur de rouge dans la couleur. Si non préciser prend la valeur defini dans rgb.config.defaultColor.red.
     *  @param {Number} [green] - La valeur de vert dans la couleur. Si non préciser prend la valeur defini dans rgb.config.defaultColor.green.
-    *  @param {Number} [blue] - La valeur de bleu dans la couleur. Si non préciser prend la valeur defini dans rgb.config.defaultColor.blue.
-    *  @param {Number} [alpha] - La tansparance de la couleur, valeur entre 0 et 1. Si non préciser prend la valeur defini dans rgb.config.defaultAlpha.
+    *  @param {Number} blue - La valeur de bleu dans la couleur. Si non préciser prend la valeur defini dans rgb.config.defaultColor.blue.
+    *  @param {Number} alpha - La tansparance de la couleur, valeur entre 0 et 1. Si non préciser prend la valeur defini dans rgb.config.defaultAlpha.
     */
     constructor(red = rgb.config.defaultColor.red, green = rgb.config.defaultColor.green, blue = rgb.config.defaultColor.blue, alpha = rgb.config.defaultAlpha) {
         if (typeof red != 'number' || typeof green != 'number' || typeof blue != 'number') {
@@ -19,7 +47,7 @@ class rgb {
         this.green = green;
         this.blue = blue;
         if (typeof alpha == 'number') {
-            if (alpha >= 0 & alpha <= 1) {
+            if (alpha >= 0 &amp; alpha &lt;= 1) {
                 this.alpha = alpha;
             } else {
                 throw new Error("rgb, constructor: alpha params vaalue must be betwin 0 and 1 (0 and 1 include)")
@@ -74,9 +102,9 @@ class rgb {
      */
     getHex() {
         let alpha = false;
-        let red = this.red < 255 ? this.red < 0 ? 0 : this.red : 255;
-        let green = this.green < 255 ? this.green < 0 ? 0 : this.green : 255;
-        let blue = this.blue < 255 ? this.blue < 0 ? 0 : this.blue : 255;
+        let red = this.red &lt; 255 ? this.red &lt; 0 ? 0 : this.red : 255;
+        let green = this.green &lt; 255 ? this.green &lt; 0 ? 0 : this.green : 255;
+        let blue = this.blue &lt; 255 ? this.blue &lt; 0 ? 0 : this.blue : 255;
         let sred = red.toString(16);
         let sgreen = green.toString(16);
         let sblue = blue.toString(16);
@@ -117,9 +145,17 @@ class rgb {
             opp, op, oppp, '', ...logParam);
         return this;
     }
+    /**
+      *  ajoute une class à l'objet rgb comme rgb.random, rgb.black, rgb.white, rgb.red ect..
+      *  @param {String} name - le nom de la class à ajouter.
+      *  @param {class} class_ - la class à ajouter. bright 
+      */
+    static addClass(name, class_) {
+        rgb[name] = class_;
+    }
 }
 
-rgb.random = class {
+rgb.addClass('random', class {
     constructor(alpha = false) {
         let c = new rgb();
         c.red = Math.floor(Math.random() * ((255 - 0) + 1) + 0);
@@ -130,23 +166,23 @@ rgb.random = class {
         }
         return c;
     }
-};
-rgb.red = class {
+});
+rgb.addClass('red', class {
     constructor() {
         return new rgb(255, 0, 0);
     }
-};
-rgb.green = class {
+});
+rgb.addClass('green', class {
     constructor() {
         return new rgb(0, 255, 0);
     }
-};
-rgb.blue = class {
+});
+rgb.addClass('blue', class {
     constructor() {
         return new rgb(0, 0, 255);
     }
-};
-rgb.black = class {
+});
+rgb.addClass('black', class {
     constructor() {
         let newC = rgb.config.codeLogColor.new;
         let whiteC = rgb.config.codeLogColor.white;
@@ -174,18 +210,18 @@ rgb.black = class {
         }
         return new rgb();
     }
-};
-rgb.white = class {
+});
+rgb.addClass('white', class {
     constructor() {
         return new rgb().invert();
     }
-};
-rgb.grey = class {
+});
+rgb.addClass('grey', class {
     constructor() {
         return new rgb().brighter(122.5);
     }
-};
-rgb.copy = class {
+});
+rgb.addClass('copy', class {
     constructor(c, alpha = true) {
         if (!c instanceof rgb) {
             throw new TypeError("rgb.copy, please pass a rgb in constructor");
@@ -196,7 +232,7 @@ rgb.copy = class {
         }
         return res;
     }
-};
+});
 
 rgb.config = {
     uselessClassWarn: true,
@@ -221,7 +257,7 @@ function loc(c) {
 }
 
 rgb.help = function(...helps) {
-    for (let i = 0;i < helps.length;i++) {
+    for (let i = 0;i &lt; helps.length;i++) {
         const help = helps[i];
         const code = rgb.config.codeLogColor;
         if (help == rgb.config) {
@@ -238,4 +274,26 @@ rgb.help = function(...helps) {
             console.info("%chelp, not found or not writed.",loc(code.info))
         }
     }
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="rgb.html">rgb</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 21 2018 17:00:59 GMT+0200 (Paris, Madrid (heure d’été))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
