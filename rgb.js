@@ -118,8 +118,13 @@ class rgb {
         return this;
     }
 }
-
 rgb.random = class {
+    /**
+     * @class rgb.random creé une couleure aleatoire.
+     * @constructor
+     * @param {boolean} [alph = false] - si true genere une couleure aleatoire avec un alpha aleatoire, si false genere une couleur avec 1 comme alpha.  
+     * @returns {rgb}
+     */
     constructor(alpha = false) {
         let c = new rgb();
         c.red = Math.floor(Math.random() * ((255 - 0) + 1) + 0);
@@ -132,60 +137,72 @@ rgb.random = class {
     }
 };
 rgb.red = class {
+    /**
+     * @class rgb.red crée une couleure rouge
+     * @constructor
+     * @returns {rgb}
+     */
     constructor() {
         return new rgb(255, 0, 0);
     }
 };
 rgb.green = class {
+    /**
+     * @class rgb.green crée une couleure verte
+     * @constructor
+     * @returns {rgb}
+     */
     constructor() {
         return new rgb(0, 255, 0);
     }
 };
+/**
+ * @class rgb.blue crée une couleure bleu
+ * @constructor new rgb.blue()
+ * @returns {rgb}
+ */
 rgb.blue = class {
+    
     constructor() {
         return new rgb(0, 0, 255);
     }
 };
 rgb.black = class {
+    /**
+     * @class rgb.black crée une couleure noire
+     * @constructor
+     * @returns {rgb}
+     */
     constructor() {
-        let newC = rgb.config.codeLogColor.new;
-        let whiteC = rgb.config.codeLogColor.white;
-        let bgC = rgb.config.codeLogColor.bg;
-        let redC = rgb.config.codeLogColor.red;
-        let rgbC = rgb.config.codeLogColor.class;
-        let yellowC = rgb.config.codeLogColor.boolean;
-        if (rgb.config.uselessClassWarn) {
-            console.warn('rgb.black: use this class is useless you can just do %c new %crgb%c() %c.\nto unactive this warn place ' +
-                '%c rgb%c.%cconfig%c.%cuselessClassWarn %c= %cfalse%c; %c in your code.',
-                `color:${newC.get()};background-color:${bgC.get()}`,
-                `color:${rgbC.get()};background-color:${bgC.get()}`,
-                `color:${whiteC.get()};background-color:${bgC.get()}`,
-                ``,
-                `color:${redC.get()};background-color:${bgC.get()}`,
-                `color:${whiteC.get()};background-color:${bgC.get()}`,
-                `color:${redC.get()};background-color:${bgC.get()}`,
-                `color:${whiteC.get()};background-color:${bgC.get()}`,
-                `color:${redC.get()};background-color:${bgC.get()}`,
-                `color:${whiteC.get()};background-color:${bgC.get()}`,
-                `color:${yellowC.get()};background-color:${bgC.get()}`,
-                `color:${whiteC.get()};background-color:${bgC.get()}`,
-                ``
-            )
-        }
         return new rgb();
     }
 };
 rgb.white = class {
+    /**
+     * @class rgb.white crée une couleure blanche
+     * @constructor
+     * @returns {rgb}
+     */
     constructor() {
         return new rgb().invert();
     }
 };
 rgb.grey = class {
+    /**
+     * @class rgb.grey crée une couleure grise
+     * @constructor
+     * @returns {rgb}
+     */
     constructor() {
         return new rgb().brighter(122.5);
     }
 };
 rgb.copy = class {
+    /**
+     * @class rgb.copy copie une couleure
+     * @constructor
+     * @returns {rgb}
+     */
     constructor(c, alpha = true) {
         if (!c instanceof rgb) {
             throw new TypeError("rgb.copy, please pass a rgb in constructor");
@@ -197,9 +214,8 @@ rgb.copy = class {
         return res;
     }
 };
-
 rgb.config = {
-    uselessClassWarn: true,
+    warn: true,
     defaultColor: {
         red: 0,
         green: 0,
@@ -219,15 +235,14 @@ rgb.config.codeLogColor = {
 function loc(c) {
     return "color:"+c.get()+";";
 }
-
 rgb.help = function(...helps) {
     for (let i = 0;i < helps.length;i++) {
         const help = helps[i];
         const code = rgb.config.codeLogColor;
         if (help == rgb.config) {
             console.info('%cthe config of rgb class for set his default color and other things.',loc(code.info))
-        } else if (help == rgb.config.uselessClassWarn) {
-            console.info('%cdefault value: %ctrue%c\nsay if rgb warn when an useless class is used.',loc(code.info),loc(code.boolean),loc(code.info))
+        } else if (help == rgb.config.warn) {
+            console.info('%cdefault value: %ctrue%c\nactive or unactive rgb warn.',loc(code.info),loc(code.boolean),loc(code.info))
         } else if (help == rgb.config.defaultColor) {
 
         } else if (help == rgb.config.defaultAlpha) {
