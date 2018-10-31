@@ -259,7 +259,7 @@ va donner, dans la console :
 </div>
 <div style="color:blue">un petit message</div>
 
->Si les blocs rouge ne s'affiche pas bien c'est que votre "interpreteur" markdown
+>Si les blocs rouge ne s'affiche pas bien c'est que votre "interpreteur" markdown ne comprend pas les divs
 
 ### <span style="color:rgb(97, 145, 255)">to</span>
 
