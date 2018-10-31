@@ -12,13 +12,11 @@ class rgb {
     *  @param {Number} [alpha] - La tansparance de la couleur, valeur entre 0 et 1. Si non préciser prend la valeur defini dans rgb.config.defaultAlpha.
     */
     constructor(red = rgb.config.defaultColor.red, green = rgb.config.defaultColor.green, blue = rgb.config.defaultColor.blue, alpha = rgb.config.defaultAlpha) {
-        if (typeof red != 'number' || typeof green != 'number' || typeof blue != 'number') {
-            throw new TypeError("rgb, constructor: all params type must be number");
-        }
+        if (typeof red !== 'number' || typeof green !== 'number' || typeof blue !== 'number') throw new TypeError("rgb, constructor: all params type must be number");
         this.red = red;
         this.green = green;
         this.blue = blue;
-        if (typeof alpha == 'number') {
+        if (typeof alpha === 'number') {
             if (alpha >= 0 & alpha <= 1) {
                 this.alpha = alpha;
             } else {
@@ -33,9 +31,7 @@ class rgb {
      * @param {boolean} [alpha = true] - precise si la transparence de la couleure doir etre donne. example new rgb(0, 255, 0, 1).get() renvoie "rgba(0, 255, 0, 1)" alors que new rgb(0, 255, 0, 1).get(false) renvoie "rgb(0, 255, 0)", si non preciser prend true.
      */
     get(alpha = true) {
-        if (typeof alpha != 'boolean') {
-            throw new TypeError("rgb, get: alpha type must be a boolean");
-        }
+        if (typeof alpha != 'boolean') throw new TypeError("rgb, get: alpha type must be a boolean");
         let res = `(${this.red}, ${this.green}, ${this.blue}`;
         if (alpha) {
             res = 'rgba' + res + ' ,' + this.alpha + ')';
@@ -49,30 +45,28 @@ class rgb {
      * @param {Number} [bright = 20] - la valeur de l'eclairssicement.
      */
     brighter(bright = 20) {
-        if (typeof bright != 'number') {
-            throw new TypeError("rgb, brighter: bright params type must be a number");
-        }
-        this.red += bright;
-        this.green += bright;
-        this.blue += bright;
-        return this;
+        if (typeof bright != 'number') throw new TypeError("rgb, brighter: bright params type must be a number");
+        let res = rgb.config.overwriteColor ? this : new rgb.copy(this);
+        res.red += bright;
+        res.green += bright;
+        res.blue += bright;
+        return res;
     }
     /** Baisse la luminositer de la couleur.
       * @param {Number} [dark = 20] - la valeur de l'assombricement. Si non preciser prend 20.
       */
     darker(dark = 20) {
-        if (typeof dark != 'number') {
-            throw new TypeError("rgb, darker: dark params type must be a number");
-        }
-        this.red -= dark;
-        this.green -= dark;
-        this.blue -= dark;
-        return this;
+        if (typeof dark != 'number') throw new TypeError("rgb, darker: dark params type must be a number");
+        let res = rgb.config.overwriteColor ? this : new rgb.copy(this);
+        res.red -= dark;
+        res.green -= dark;
+        res.blue -= dark;
+        return res;
     }
     /** 
      * La meme chose que get() mais ranvoi de l'hexadecimal.
      */
-    getHex() {
+    get hex() {
         let alpha = false;
         let red = this.red < 255 ? this.red < 0 ? 0 : this.red : 255;
         let green = this.green < 255 ? this.green < 0 ? 0 : this.green : 255;
@@ -80,9 +74,9 @@ class rgb {
         let sred = red.toString(16);
         let sgreen = green.toString(16);
         let sblue = blue.toString(16);
-        let Sred = sred.length == 2 ? sred : '0' + sred;
-        let Sgreen = sgreen.length == 2 ? sgreen : '0' + sgreen;
-        let Sblue = sblue.length == 2 ? sblue : '0' + sblue;
+        let Sred = sred.length === 2 ? sred : '0' + sred;
+        let Sgreen = sgreen.length === 2 ? sgreen : '0' + sgreen;
+        let Sblue = sblue.length === 2 ? sblue : '0' + sblue;
         let res = `#${Sred}${Sgreen}${Sblue}`;
         if (alpha) {
             res += (255 * ((Math.round(this.alpha) * 100) / 100)).toString(16);
@@ -94,28 +88,54 @@ class rgb {
      */
     
     invert() {
-        this.red = 255 - this.red;
-        this.green = 255 - this.green;
-        this.blue = 255 - this.blue;
-        return this;
+        let res = rgb.config.overwriteColor ? this : new rgb.copy(this);
+        res.red = 255 - res.red;
+        res.green = 255 - res.green;
+        res.blue = 255 - res.blue;
+        return res;
     }
     /**  affiche la couleure dans la console.
-      *  @param {any} log - text à afficher en dessous de la couleure.
-      *  @param {any[]} logParam - parametre du text a afficher comme dans console.log().
+      *  @param {any} [log] - text à afficher en dessous de la couleure.
+      *  @param {any[]} [logParam] - parametre du text a afficher comme dans console.log().
       */
     logColor(log, ...logParam) {
-        let strr = log == undefined ? "" : "\n" + log;
+        let strr = log === undefined ? "" : "\n" + log;
         let br = 10;
         let unit = 'px';
         let op = `color: ${this.get()};background-color: ${this.get()};`;
         let opp = op + 'border-top-left-radius:' + br + unit + ';border-top-right-radius:' + br + unit + ';';
         let oppp = op + 'border-bottom-left-radius:' + br + unit + ';border-bottom-right-radius:' + br + unit + ';';
         console.log('%c_----_\n' +
-            '%c......\n' +
-            '%c-____-%c' +
-            strr,
-            opp, op, oppp, '', ...logParam);
+                    '%c......\n' +
+                    '%c-____-%c' +
+                    strr,
+                    opp, op, oppp, '', ...logParam
+                   );
         return this;
+    }
+    /**
+     * permet de rajouter des couleure a rgb ex: rgb.red()
+     * @param {String} name - le nom de la nouvelle couleur a rajouter
+     * @param {rgb} color - la couleure qui serat retourner par l'appel de cette nouvelle class
+     */
+    static addColorClass(name, color = new rgb()) {
+        if (name === undefined) throw new Error('rgb, addColorClass: name arg is required');
+        if (typeof name !== 'string') throw new TypeError('rgb, addColorClass: name arg must be a string');
+        if (!color instanceof rgb) throw new TypeError('rgb, addColorClass: color arg must be an instance of rgb');
+        Object.defineProperty(rgb, name, {
+            value: class {
+                constructor() {
+                    return new rgb(red, green, blue, alpha);
+                }
+            }
+        })
+    }
+    to(color, percent = 50) {
+        if (color === undefined) throw new Error('rgb, to: color arg is required');
+        if (typeof percent !== 'number') throw new TypeError('rgb, to: percent arg must be a number between 0 and 100 (0 and 100 include)');
+        if (percent > 100 || percent < 0) throw new Error('rgb, to: percent arg must be between 0 and 100 (0 and 100 include)');
+        if (!color instanceof rgb) throw new TypeError('rgb, to: color arg must be an instance of rgb');
+        
     }
 }
 rgb.random = class {
@@ -221,6 +241,7 @@ rgb.config = {
         green: 0,
         blue: 0
     },
+    overwriteColor: true,
     defaultAlpha: 1
 }
 rgb.config.codeLogColor = {
@@ -230,24 +251,59 @@ rgb.config.codeLogColor = {
     red: new rgb(255, 80, 80),
     class: new rgb(229, 192, 107),
     boolean: new rgb(237, 151, 101),
-    info: new rgb(0,0,0)
+    info: new rgb(0,0,0),
+    operator: new rgb(84, 82, 194),
+    methode: new rgb(97, 175, 233)
 };
 function loc(c) {
     return "color:"+c.get()+";";
 }
+function bloc(c) {
+    return`background-color: ${rgb.config.codeLogColor.bg.get()};color: ${c.get()}`
+}
 rgb.help = function(...helps) {
     for (let i = 0;i < helps.length;i++) {
-        const help = helps[i];
+        const help = helps[i].toLowerCase();
         const code = rgb.config.codeLogColor;
-        if (help == rgb.config) {
+        if (help === 'rgb.config') {
             console.info('%cthe config of rgb class for set his default color and other things.',loc(code.info))
-        } else if (help == rgb.config.warn) {
+        } else if (help === 'rgb.config.warn') {
             console.info('%cdefault value: %ctrue%c\nactive or unactive rgb warn.',loc(code.info),loc(code.boolean),loc(code.info))
-        } else if (help == rgb.config.defaultColor) {
+        } else if (help === 'rgb.config.overwritecolor') {
+            console.info('%cdefault value: %ctrue%c\n'+
+                        'say if methodes will overwrite the color when they are called.\n'+
+                        'ex:\n'+
+                        '%c const %cmyColor %c= %cnew %crgb%c.%cblack%c();\n'+
+                        ' %cmyColor%c.%cbrighter%c().%clogColor%c();      \n'+
+                        ' %cmyColor%c.%clogColor%c();                     %c\n'+
+                        '\n'+
+                        'if it is true the two loged color will be the same'+
+                        ' but if it is false, the first color will be myColor but brighter of 20 and the second will be just myColor.',
+                        loc (code.info),
+                        loc (code.boolean),
+                        loc (code.info),
+                        bloc(code.new),
+                        bloc(code.class),
+                        bloc(code.operator),
+                        bloc(code.new),
+                        bloc(code.class),
+                        bloc(code.white),
+                        bloc(code.class),
+                        bloc(code.white),
+                        bloc(code.red),
+                        bloc(code.white),
+                        bloc(code.methode),
+                        bloc(code.white),
+                        bloc(code.methode),
+                        bloc(code.white),
+                        bloc(code.red),
+                        bloc(code.white),
+                        bloc(code.methode),
+                        bloc(code.white),
+                        loc (code.info));
+        } else if (help === 'rgb.config.defaultalpha') {
 
-        } else if (help == rgb.config.defaultAlpha) {
-
-        } else if (help == rgb.config.codeLogColor) {
+        } else if (help === 'rgb.config.codelogcolor') {
 
         } else {
             console.info("%chelp, not found or not writed.",loc(code.info))
