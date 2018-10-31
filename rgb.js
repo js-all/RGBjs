@@ -27,7 +27,7 @@ class rgb {
         }
     }
     /**
-     * renvoi la couleur sou forme de string. exemple: new rgb(0, 255, 0, 1).get() renvoi "rgba(0, 255, 0, 1)"
+     * renvoi la couleur sou forme de string. exemple: new rgb(0, 255, 0, 1).kl renvoi "rgba(0, 255, 0, 1)"
      * @param {boolean} [alpha = true] - precise si la transparence de la couleure doir etre donne. example new rgb(0, 255, 0, 1).get() renvoie "rgba(0, 255, 0, 1)" alors que new rgb(0, 255, 0, 1).get(false) renvoie "rgb(0, 255, 0)", si non preciser prend true.
      */
     get(alpha = true) {
@@ -35,6 +35,21 @@ class rgb {
         let res = `(${this.red}, ${this.green}, ${this.blue}`;
         if (alpha) {
             res = 'rgba' + res + ' ,' + this.alpha + ')';
+        } else {
+            res = 'rgb' + res + ')';
+        }
+        return res;
+    }
+    get value() {
+        let alpha = this.alpha == 1 ? false : true;
+        if (typeof alpha != 'boolean') throw new TypeError("rgb, get: alpha type must be a boolean");
+        let red = this.red > 255 ? 255 : this.red < 0 ? 0 : this.red;
+        let green = this.green > 255 ? 255 : this.green < 0 ? 0 : this.green;
+        let blue = this.blue > 255 ? 255 : this.blue < 0 ? 0 : this.blue;
+        let res = `(${red}, ${green}, ${blue}`;
+        let Alpha = this.alpha > 1 ? 1 : this.alpha < 0 ? 0 : this.alpha;
+        if (alpha) {
+            res = 'rgba' + res + ' ,' + Alpha + ')';
         } else {
             res = 'rgb' + res + ')';
         }
@@ -64,7 +79,7 @@ class rgb {
         return res;
     }
     /** 
-     * La meme chose que get() mais ranvoi de l'hexadecimal.
+     * La meme chose que get() mais renvoi de l'hexadecimal.
      */
     get hex() {
         let alpha = false;
@@ -102,7 +117,7 @@ class rgb {
         let strr = log === undefined ? "" : "\n" + log;
         let br = 10;
         let unit = 'px';
-        let op = `color: ${this.get()};background-color: ${this.get()};`;
+        let op = `color: ${this.value};background-color: ${this.value};`;
         let opp = op + 'border-top-left-radius:' + br + unit + ';border-top-right-radius:' + br + unit + ';';
         let oppp = op + 'border-bottom-left-radius:' + br + unit + ';border-bottom-right-radius:' + br + unit + ';';
         console.log('%c_----_\n' +
@@ -130,12 +145,30 @@ class rgb {
             }
         })
     }
+    /**
+     * pars de la couleure actuelle pour aller vers une aurte couleure passer en paramatre
+     * @param {rgb} color - la couleure vers la quelle on veut aller
+     * @param {Number} [percent = 50] - le pourcentage de la transformation vers la couleure
+     */
     to(color, percent = 50) {
         if (color === undefined) throw new Error('rgb, to: color arg is required');
         if (typeof percent !== 'number') throw new TypeError('rgb, to: percent arg must be a number between 0 and 100 (0 and 100 include)');
         if (percent > 100 || percent < 0) throw new Error('rgb, to: percent arg must be between 0 and 100 (0 and 100 include)');
         if (!color instanceof rgb) throw new TypeError('rgb, to: color arg must be an instance of rgb');
-        
+        let res = rgb.config.overwriteColor ? this : new rgb.copy(this);
+        let toRed = color.red - res.red;
+        let toGreen = color.green - res.green;
+        let toBlue = color.blue - res.blue;
+        let toAlpha = color.alpha - res.alpha;
+        let red = toRed * (percent / 100);
+        let green = toGreen * (percent / 100);
+        let blue = toBlue * (percent / 100);
+        let alpha = toAlpha * (percent / 100);
+        res.red += red;
+        res.green += green;
+        res.blue += blue;
+        res.alpha += alpha;
+        return res;
     }
 }
 rgb.random = class {
@@ -178,7 +211,7 @@ rgb.green = class {
 };
 /**
  * @class rgb.blue crée une couleure bleu
- * @constructor new rgb.blue()
+ * @constructor new rgb.blue
  * @returns {rgb}
  */
 rgb.blue = class {
@@ -256,10 +289,10 @@ rgb.config.codeLogColor = {
     methode: new rgb(97, 175, 233)
 };
 function loc(c) {
-    return "color:"+c.get()+";";
+    return "color:"+c.value+";";
 }
 function bloc(c) {
-    return`background-color: ${rgb.config.codeLogColor.bg.get()};color: ${c.get()}`
+    return`background-color: ${rgb.config.codeLogColor.bg.value};color: ${c.value}`
 }
 rgb.help = function(...helps) {
     for (let i = 0;i < helps.length;i++) {
