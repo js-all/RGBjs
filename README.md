@@ -288,7 +288,7 @@ va afficher, dans la console
 <br />
 </div>
 
-## rgb.help 
+## rgb.help
 
 rgb.help est une method static permetant d'obtenir de l'aide sur certaine chose
 >elle est en construction et donc ne possède pas beaucoup efficace
