@@ -43,7 +43,7 @@ ou `nom` est le nom que vous vouler donner a la couleure pour l'appeler et `coul
 new rgb.nom();
 ```
 
-ne metter pas `new rgb.nom()` metter `new rgb.leNomQueVousAvezChoisi()`
+replacer `nom` par le nom que vous avez mis lors de l'appel de `rgb.addColorClass()`
 
 Il existe aussi d'autre class de ce genre tel que:
 
@@ -270,6 +270,7 @@ au final ce n'est pas la memme couleure alors que si ca ne s'arrete pas :
 ```
 
 >Noter que si, les proprierter green, blue et red ne plafone pas a 255 et ne s'arrete pas a 0 avec le getter value la string rendu plafone a 255 et s'arrete a 0.
+
 >## le getter value plafone a 255 et s'arrete a 0, si dans les exemple au desu ce n'est pas le cas c'est que ce n'est que pour expliquer.
 
 ### si l'on a un red supperireure a 255 via le getter value il sera egale a 255.
