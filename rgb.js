@@ -120,9 +120,9 @@ class rgb {
         let op = `color: ${this.value};background-color: ${this.value};`;
         let opp = op + 'border-top-left-radius:' + br + unit + ';border-top-right-radius:' + br + unit + ';';
         let oppp = op + 'border-bottom-left-radius:' + br + unit + ';border-bottom-right-radius:' + br + unit + ';';
-        console.log('%c_----_\n' +
-                    '%c......\n' +
-                    '%c-____-%c' +
+        console.log('%c      \n' +
+                    '%c      \n' +
+                    '%c      %c' +
                     strr,
                     opp, op, oppp, '', ...logParam
                    );
