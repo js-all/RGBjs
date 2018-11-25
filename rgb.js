@@ -246,8 +246,8 @@ rgb.grey = class {
      * @constructor
      * @returns {rgb}
      */
-    constructor() {
-        return new rgb().brighter(122.5);
+    constructor(g = 122.5) {
+        return new rgb(g, g, g);
     }
 };
 rgb.copy = class {
